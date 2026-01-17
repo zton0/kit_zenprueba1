@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minijuegos</title>
+
+<style>
+body{
+    background-color: #150014;
+    background-image: url('kit.jpeg');  /* <- IMAGEN DE FONDO */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+h1{
+    margin-top: 20px;
+}
+
+.contenedor-juegos{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    width: 90%;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.contenedor-juegos img{
+    width: 220px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 3px solid #ff006a;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.contenedor-juegos img:hover{
+    transform: scale(1.07);
+}
+
+.juego-item p{
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+@media(max-width: 900px){
+    .contenedor-juegos{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 500px){
+    .contenedor-juegos{
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+</style>
+
+<link rel="icon" type="image/png" href="logokit.png">
+
+</head>
+<body>
+
+<h1>Minijuegos el prieto:</h1>
+<p>Selecciona un minijuego:</p>
+<br><br><br>
+
+<div class="contenedor-juegos">
+
+    <div class="juego-item">
+    <a href="obstaculos.html">
+        <img src="Captura de pantalla 2025-11-29 182226.png" alt="">
+    </a>
+    <p>Saltar Obstá-culos</p>
+</div>
+
+
+    <div class="juego-item">
+        <a href="quiz.html">
+            <img src="Capturadepantalla2025-11-29181331.png" alt="">
+        </a>
+        <p>¿¿¿Que tanto sabes de kit_zen???</p>
+    </div>
+
+    <div class="juego-item">
+        <a href="aim.html">
+            <img src="Captura de pantalla 2025-11-29 182358.png" alt="">
+        </a>
+        <p>Kit-aim</p>
+    </div>
+
+  
+</div>
+
+</body>
+</html>

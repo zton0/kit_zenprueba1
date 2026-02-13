@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disparale a kit</title>
+    <link rel="icon" type="image/png" href="logokit.png">s
+
+<style>
+    body{
+        margin:0;
+        overflow:hidden;
+        background:black;
+    }
+
+    #score{
+        position: absolute;
+        top:10px;
+        left:10px;
+        color:white;
+        font-size:30px;
+        font-family:Arial;
+    }
+
+    #timer{
+        position: absolute;
+        top:10px;
+        right:10px;
+        color:#00ffea;
+        font-size:30px;
+        font-family:Arial;
+    }
+
+    #resultScreen{
+        position: fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.9);
+        color:white;
+        font-size:40px;
+        font-family:Arial;
+        display:none;
+        justify-content:center;
+        align-items:center;
+        flex-direction:column;
+        text-align:center;
+    }
+
+    #restartBtn{
+        margin-top:20px;
+        padding:10px 20px;
+        font-size:30px;
+        border:none;
+        border-radius:10px;
+        cursor:pointer;
+    }
+
+    .target{
+        position:absolute;
+        width:80px;
+        height:80px;
+        cursor:pointer;
+        user-select:none;
+        -webkit-user-drag: none;
+    }
+</style>
+</head>
+<body>
+
+<div id="score">Puntos: 0</div>
+<div id="timer">Tiempo: 30</div>
+
+<img id="target" class="target" src="estudio.png" alt="objetivo" draggable="false">
+
+<!-- 🔊 AUDIO -->
+<audio id="hitSound" src="disparo.mp3" preload="auto"></audio>
+
+<div id="resultScreen">
+    <p id="finalScore"></p>
+    <button id="restartBtn">Reiniciar</button>
+</div>
+
+<script>
+let score = 0;
+let time = 30;
+let intervalo;
+
+const targetImg = "estudio.png";
+
+const target = document.getElementById("target");
+const scoreText = document.getElementById("score");
+const timerText = document.getElementById("timer");
+const resultScreen = document.getElementById("resultScreen");
+const finalScore = document.getElementById("finalScore");
+const restartBtn = document.getElementById("restartBtn");
+const hitSound = document.getElementById("hitSound");
+
+target.src = targetImg;
+target.draggable = false;
+
+function moveTarget(){
+    if(time <= 0) return;
+
+    const maxX = window.innerWidth - target.clientWidth;
+    const maxY = window.innerHeight - target.clientHeight;
+
+    const x = Math.random() * Math.max(0, maxX);
+    const y = Math.random() * Math.max(0, maxY);
+
+    target.style.left = x + "px";
+    target.style.top = y + "px";
+}
+
+target.addEventListener("click", ()=>{
+    if(time <= 0) return;
+    score++;
+    scoreText.textContent = "Puntos: " + score;
+
+    hitSound.currentTime = 0;   // resetea por si lo presionan rápido
+    hitSound.play();            // 🔊 SONIDO
+
+    moveTarget();
+});
+
+function startTimer(){
+    clearInterval(intervalo);
+    intervalo = setInterval(()=>{
+        time--;
+        timerText.textContent = "Tiempo: " + time;
+        if(time <= 0){
+            endGame();
+        }
+    },1000);
+}
+
+function endGame(){
+    clearInterval(intervalo);
+    target.style.display = "none";
+    resultScreen.style.display = "flex";
+    finalScore.textContent = "Puntuación: " + score;
+}
+
+restartBtn.addEventListener("click", ()=>{
+    score = 0;
+    time = 30;
+    scoreText.textContent = "Puntos: 0";
+    timerText.textContent = "Tiempo: 30";
+    resultScreen.style.display = "none";
+    target.style.display = "block";
+    moveTarget();
+    startTimer();
+});
+
+// mover al iniciar y arrancar timer
+window.addEventListener("load", ()=>{
+    moveTarget();
+    startTimer();
+});
+
+window.addEventListener("resize", ()=>{
+    moveTarget();
+});
+</script>
+
+</body>
+</html>

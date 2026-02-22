@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Escapa de juanes</title>
+    <link rel="icon" type="image/png" href="logokit.png">
+
+<style>
+
+body{
+    background-color: #150014;
+    background-image: url('kit.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+#game {
+    width:800px;
+    height:240px;
+    border:3px solid #ff0099;
+    margin:auto;
+    margin-top:40px;
+    overflow:hidden;
+    position:relative;
+
+    background:url("juan.gif"); 
+    background-size:cover;     
+    background-position:center; 
+}
+
+#ground {
+    width:1600px;
+    height:30px;
+    background:#4d004d;
+    position:absolute;
+    bottom:0;
+    left:0;
+}
+
+#kit {
+    width:60px;
+    height:70px;
+    background:url("kitmaid.png");
+    background-size:cover;
+    border-radius:10px;
+    position:absolute;
+    bottom:30px;
+    left:80px;
+}
+
+.obst {
+    width:40px;
+    height:60px;
+    background:url("juanesc.jpg");
+    background-size:cover;
+    position:absolute;
+    bottom:30px;
+}
+
+#score{
+    font-size:22px;
+    margin-top:10px;
+}
+
+#gameOver{
+    position:absolute;
+    top:40%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    color:red;
+    font-size:40px;
+    font-weight:bold;
+    display:none;
+    text-shadow:2px 2px 2px black;
+}
+
+#subGO{
+    position:absolute;
+    top:58%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    color:white;
+    font-size:26px;
+    display:none;
+}
+
+</style></head>
+<body>
+
+<h1>Escapa de Juanes!!!</h1>
+<p>Presiona ESPACIO para saltar</p>
+<div id="score">Puntos: 0</div>
+<br><br>
+<div id="game">
+    <div id="kit"></div>
+    <div id="ground"></div>
+    <div id="gameOver">GAME OVER</div>
+    <div id="subGO"></div>
+</div>
+
+<script>
+
+let kit = document.getElementById("kit");
+let scoreTxt = document.getElementById("score");
+let ground = document.getElementById("ground");
+let game = document.getElementById("game");
+let gameOverTxt = document.getElementById("gameOver");
+let subGO = document.getElementById("subGO");
+
+let jumping = false;
+let vivo = true;
+let velocity = 0;
+let gravity = 0.60;
+let score = 0;
+let speed = 10;
+
+let kitY = 30;
+let groundX = 0;
+
+document.addEventListener("keydown", (e)=>{
+    if(e.code === "Space"){
+        if(!vivo){
+            location.reload(); 
+        }
+        if(!jumping){
+            jumping = true;
+            velocity = 11;
+        }
+    }
+});
+
+let obstaculos = [];
+function crearObstaculo(){
+    if(!vivo) return;
+    let o = document.createElement("div");
+    o.classList.add("obst");
+    o.style.right = "-40px";
+    game.appendChild(o);
+    obstaculos.push(o);
+}
+setInterval(crearObstaculo, 1700);
+
+function update(){
+
+    if(!vivo) return;
+
+    groundX -= speed;
+    if(groundX <= -800) groundX = 0;
+    ground.style.left = groundX + "px";
+
+    if(jumping){
+        kitY += velocity;
+        velocity -= gravity;
+        if(kitY <= 30){
+            kitY = 30;
+            jumping = false;
+        }
+        kit.style.bottom = kitY + "px";
+    }
+
+    obstaculos.forEach(o=>{
+        let pos = parseInt(o.style.right);
+        o.style.right = (pos + speed) + "px";
+
+        let obstX = game.offsetWidth - (pos+40);
+        let kitX = 80;
+        let obstY = 30;
+        if(obstX < kitX+60 && obstX+40 > kitX && kitY < obstY+60){
+
+            vivo = false; 
+
+            gameOverTxt.style.display = "block";
+            subGO.innerText = "Puntos: "+score;
+            subGO.style.display = "block";
+        }
+
+       
+if(!o.pasado && pos > 780){
+    o.pasado = true;      
+    score++;
+    scoreTxt.innerHTML = "Puntos: "+score;
+    speed += 0.08;
+}
+
+    });
+
+    requestAnimationFrame(update);
+}
+update();
+
+</script>
+</body>
+</html>

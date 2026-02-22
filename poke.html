@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poke Equipo</title>
+<link rel="icon" type="image/png" href="logokit.png">
+
+<style>
+    body{
+        background-color: #150014;
+        background-image: url('pokefondo.jpg');  
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: Arial, sans-serif;
+        color: white;
+        text-align: center;
+    }
+
+    .container-box{
+        width:730px;
+        margin:auto;
+        padding:15px;
+        border-radius:10px;
+        border:4px solid #000;
+    }
+
+    .grid{
+        display:grid;
+        grid-template-columns: repeat(6, 100px);
+        grid-gap:8px;
+        justify-content:center;
+        min-height:350px;
+    }
+
+    .slot{
+        width:100px;
+        height:120px;
+        border:2px solid #000;
+        border-radius:6px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        padding:3px;
+        background: rgba(0,0,0,0.4);
+    }
+
+    .slot img{
+        width:85%;
+        height:85%;
+        object-fit:contain;
+    }
+
+    .poke-name{
+        font-size:12px;
+        margin-top:3px;
+        font-weight:bold;
+    }
+
+    .btn-arrow{
+        font-size:35px;
+        cursor:pointer;
+        user-select:none;
+        padding:5px 15px;
+    }
+
+    .top-controls{
+        display:flex;
+        justify-content:space-between;
+        margin:10px 0;
+        font-size:28px;
+        font-weight:bold;
+    }
+
+    .green{ background:#98e296; }
+    .red{ background:#f5a2a2; }
+    .blue{ background:#7bb6ff; }
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 MUSICA AUTO LOOP -->
+<audio autoplay loop muted id="bgMusic">
+    <source src="payacho.mp3" type="audio/mpeg">
+</audio>
+
+<div>
+    <img src="pokit.png" alt="">
+</div>
+
+<div id="boxContainer" class="container-box green">
+
+    <div class="top-controls">
+        <div class="btn-arrow" onclick="prevBox()">&lt;</div>
+        <div id="boxName">Equipo</div>
+        <div class="btn-arrow" onclick="nextBox()">&gt;</div>
+    </div>
+
+    <div class="grid" id="boxGrid"></div>
+
+</div>
+
+<script>
+
+/* TITULOS */
+let boxTitles = ["Equipo", "Muertes", "En caja"];
+
+/* EQUIPO */
+let box1 = [
+    "pokebola.png","pokebola.png","pokebola.png",
+    "pokebola.png","pokebola.png","pokebola.png"
+];
+let box1_names = [
+    "Vacío","Vacío","Vacío",
+    "Vacío","Vacío","Vacío"
+];
+
+/* MUERTES */
+let box2 = [
+    "ana.gif","salamence.gif","nidoqueen.gif","kecleon.gif","poli.gif",
+    "ursaring.gif","destroy.gif","flaffy.gif","parasect.gif","masquerain.gif",
+    "prx25.gif","gloom.gif","swellow.gif"
+];
+let box2_names = [
+    "Ana-white","Coffeleido","elPato9s","Xebas","Town",
+    "Misael","Destroy","Laucha","Juanes","Foxster",
+    "Prx25","Huachi","Berv"
+];
+
+/* EN CAJA */
+let box3 = [
+    "mewtwo.gif"
+];
+let box3_names = [
+    "Zton the MFGOAT"
+];
+
+let boxes = [box1, box2, box3];
+let names = [box1_names, box2_names, box3_names];
+
+let currentBox = 0;
+
+function loadBox(){
+
+    document.getElementById("boxName").innerText = boxTitles[currentBox];
+
+    let grid = document.getElementById("boxGrid");
+    grid.innerHTML = "";
+
+    let container = document.getElementById("boxContainer");
+    container.classList.remove("green","red","blue");
+
+    if(currentBox === 0){
+        container.classList.add("green");
+    } else if(currentBox === 1){
+        container.classList.add("red");
+    } else {
+        container.classList.add("blue");
+    }
+
+    for(let i = 0; i < boxes[currentBox].length; i++){
+
+        let div = document.createElement("div");
+        div.className = "slot";
+
+        let img = document.createElement("img");
+        img.src = boxes[currentBox][i];
+        div.appendChild(img);
+
+        let label = document.createElement("div");
+        label.className = "poke-name";
+        label.innerText = names[currentBox][i];
+        div.appendChild(label);
+
+        grid.appendChild(div);
+    }
+}
+
+function prevBox(){ 
+    currentBox = (currentBox-1+boxes.length)%boxes.length; 
+    loadBox(); 
+}
+
+function nextBox(){ 
+    currentBox = (currentBox+1)%boxes.length; 
+    loadBox(); 
+}
+
+loadBox();
+
+/* 🔊 Activar sonido al primer click */
+document.addEventListener("click", function(){
+    let music = document.getElementById("bgMusic");
+    music.muted = false;
+    music.play();
+}, { once: true });
+
+</script>
+
+</body>
+</html>
